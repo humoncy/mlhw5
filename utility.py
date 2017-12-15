@@ -12,6 +12,20 @@ def rbf_kernel(x1, x2, gamma):
     return np.exp(- gamma * np.power(euclidean_distance(x1, x2), 2))
 
 
+# RBF kernel Gram matrix
+def rbf_kernel_gram_matrix(data, gamma):
+    num_samples = data.shape[0]
+    gram = np.identity(num_samples)
+
+    for i in range(num_samples):
+        for j in range(num_samples):
+            if i > j:
+                gram[i, j] = rbf_kernel(data[i], data[j], gamma)
+                gram[j, i] = gram[i, j]
+
+    return gram
+
+
 # reorder data by their cluster_assignment
 def reorder(data, cluster_assignment):
     return data[cluster_assignment.argsort()]

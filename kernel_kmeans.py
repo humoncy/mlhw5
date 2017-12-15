@@ -1,22 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from utility import rbf_kernel, reorder, show_cluster
+from utility import rbf_kernel, rbf_kernel_gram_matrix, reorder, show_cluster
 
 
-# RBF kernel Gram matrix
-def rbf_kernel_gram_matrix(data, gamma):
-    num_samples = data.shape[0]
-    gram = np.identity(num_samples)
-
-    for i in range(num_samples):
-        for j in range(num_samples):
-            if i > j:
-                gram[i, j] = rbf_kernel(data[i], data[j], gamma)
-                gram[j, i] = gram[i, j]
-
-    return gram
-
-
+# Second term of kernel k-means
 def kkm_second_term(j, kernel_gram_mat, alpha):
     num_samples = kernel_gram_mat.shape[0]
     sum = 0
@@ -26,6 +13,7 @@ def kkm_second_term(j, kernel_gram_mat, alpha):
     return sum
 
 
+# Third term of kernel k-means
 def kkm_third_term(kernel_gram_mat, alpha):
     num_samples = kernel_gram_mat.shape[0]
     sum = 0

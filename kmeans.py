@@ -16,6 +16,11 @@ def init_centroids(data, k):
 
 # k-means clusters
 def k_means(data, k=2):
+    print("Data shape for K-means:", data.shape)
+    if data.ndim == 1:
+        raise Exception("Reshape your data either using array.reshape(-1, 1) if your data has a single feature "
+                        "or array.reshape(1, -1) if it contains a single sample.")
+
     num_samples = data.shape[0]
     # first column stores which cluster this sample belongs to,
     # second column stores the error between this sample and its centroid
@@ -24,6 +29,7 @@ def k_means(data, k=2):
 
     # step 1: init centroids
     centroids = init_centroids(data, k)
+    # show_cluster(data, k, cluster_assignment[:, 0], centroids)
 
     while cluster_changed:
         cluster_changed = False
