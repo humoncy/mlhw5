@@ -20,7 +20,8 @@ def compute_degrees(W):
 # Normalize Cut
 # Spectral clustering by rbf kernel
 def spectral_clustering(data, k, gamma=0.1):
-    # num_samples
+    print("Spectral clustering...")
+    # Number of samples
     n = data.shape[0]
 
     # Adjacency matrix
@@ -32,23 +33,29 @@ def spectral_clustering(data, k, gamma=0.1):
     # Graph Laplacian
     L = D - W
 
-    # Normalized Laplacian
+    # Normalized Cut
     D_inv_sqrt = scipy.linalg.fractional_matrix_power(D, -1/2)
     L_sym = D_inv_sqrt.dot(L).dot(D_inv_sqrt)
 
     # Compute the first k eigenvectors of L_sym
     eig_values, eig_vectors = LA.eig(L_sym)
-    # for i in range(len(eig_values)):
-    #     print(eig_values[i])
 
+    # T contains first k eigenvectors of normalized Laplacian
     T = np.zeros((n, k))
     for i in range(k):
         T[:, i] = eig_vectors[:, i]
 
-    # Form matrix H and normalize by row
+    # Resubstitude matrix H and normalize by its rows.
     H = D_inv_sqrt.dot(T)
     H /= LA.norm(H, axis=1, ord=2)[:, np.newaxis]
 
-    centroids, cluster_assignment = k_means(H)
+    # Cluster data points in eigenspace
+    centroids, cluster_assignment = k_means(H, k)
+
+    # Show the data points at the same point in eigenspace.
+    # discrete_h = np.zeros_like(H)
+    # c, discrete_h[:, 0] = k_means(H[:, 0].reshape(-1, 1), k)
+    # c, discrete_h[:, 1] = k_means(H[:, 1].reshape(-1, 1), k)
+    # centroids, cluster_assignment = k_means(discrete_h, k)
 
     return cluster_assignment

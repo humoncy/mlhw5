@@ -32,10 +32,11 @@ def reorder(data, cluster_assignment):
 
 
 # show your cluster only available with 2-D data
-def show_cluster(data, k, cluster_assignment, centroids=None):
+def show_cluster(data, k, cluster_assignment, centroids=None, title='clustering', data_name="data2"):
     num_samples, dim = data.shape
     if dim != 2:
-        raise Exception("Sorry, I can not draw because the dimension of your data is not 2!")
+        print("Sorry, I can not draw because the dimension of your data is not 2!")
+        return
 
     mark = ['or', 'ob', 'og', 'ok', '^r', '+r', 'sr', 'dr', '<r', 'pr']
     if k > len(mark):
@@ -46,10 +47,16 @@ def show_cluster(data, k, cluster_assignment, centroids=None):
         mark_index = int(cluster_assignment[i])
         plt.plot(data[i, 0], data[i, 1], mark[mark_index])
 
-    if centroids is not None:
+    if centroids is None:
+        plt.title(title + " , " + k.__str__() + " clusters")
+        plt.savefig("result/" + data_name + "_" + title + "_" + k.__str__() + ".png")
+        plt.show()
+    else:
         mark = ['Dr', 'Db', 'Dg', 'Dk', '^b', '+b', 'sb', 'db', '<b', 'pb']
         # draw the centroids
         for i in range(k):
             plt.plot(centroids[i, 0], centroids[i, 1], mark[i], markersize=10)
+        plt.title(title + " , " + k.__str__() + " clusters")
+        plt.savefig("result/" + data_name + "_" + title + "_" + k.__str__() + ".png")
+        plt.show()
 
-    plt.show()
